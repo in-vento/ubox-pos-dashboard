@@ -2,95 +2,110 @@ import React from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
+  Monitor, 
   ShoppingBag, 
+  Package, 
+  Users, 
   BarChart3, 
-  Settings, 
-  LogOut, 
-  Cloud,
-  Menu,
-  X
+  LogOut,
+  Store
 } from 'lucide-react';
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+const Layout = ({ children }: LayoutProps) => {
   const navigate = useNavigate();
   const location = useLocation();
-  const user = JSON.parse(localStorage.getItem('user_info') || '{}');
-
-  const handleLogout = () => {
-    localStorage.removeItem('cloud_token');
-    localStorage.removeItem('user_info');
-    navigate('/login');
-  };
+  const userName = localStorage.getItem('userName') || 'Usuario';
+  const businessName = localStorage.getItem('businessName') || 'Mi Negocio';
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: ShoppingBag, label: 'Ventas', path: '/orders' },
+    { icon: Monitor, label: 'Dispositivos', path: '/devices' },
+    { icon: ShoppingBag, label: 'Pedidos', path: '/orders' },
+    { icon: Package, label: 'Inventario', path: '/inventory' },
+    { icon: Users, label: 'Personal', path: '/staff' },
     { icon: BarChart3, label: 'Reportes', path: '/reports' },
-    { icon: Settings, label: 'Configuración', path: '/settings' },
   ];
 
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/login');
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 flex">
+    <div className="flex h-screen bg-slate-950 text-slate-200">
       {/* Sidebar */}
-      <aside className={`${isSidebarOpen ? 'w-64' : 'w-20'} bg-white border-r border-slate-200 transition-all duration-300 flex flex-col`}>
+      <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col">
         <div className="p-6 flex items-center gap-3">
-          <div className="bg-slate-900 text-white p-2 rounded-lg">
-            <Cloud size={24} />
+          <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-600/20">
+            <Store className="text-white w-6 h-6" />
           </div>
-          {isSidebarOpen && <span className="font-bold text-xl text-slate-900">UBOX</span>}
+          <div>
+            <h1 className="font-bold text-white tracking-tight">UBOX POS</h1>
+            <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Cloud Dashboard</p>
+          </div>
         </div>
 
-        <nav className="flex-1 px-4 space-y-2 mt-4">
+        <nav className="flex-1 px-4 py-4 space-y-1">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
                   isActive 
-                    ? 'bg-slate-900 text-white' 
-                    : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                    : 'hover:bg-slate-800 text-slate-400 hover:text-white'
                 }`}
               >
-                <item.icon size={20} />
-                {isSidebarOpen && <span className="font-medium">{item.label}</span>}
+                <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : 'group-hover:text-blue-400'}`} />
+                <span className="font-medium">{item.label}</span>
               </Link>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
-          <button
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-3 text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-colors"
-          >
-            <LogOut size={20} />
-            {isSidebarOpen && <span className="font-medium">Cerrar Sesión</span>}
-          </button>
+        <div className="p-4 mt-auto">
+          <div className="bg-slate-800/50 rounded-2xl p-4 mb-4 border border-slate-700/50">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center text-slate-400 font-bold text-xs">
+                {userName[0]}
+              </div>
+              <div className="overflow-hidden">
+                <p className="text-sm font-bold text-white truncate">{userName}</p>
+                <p className="text-[10px] text-slate-500 truncate">{businessName}</p>
+              </div>
+            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center justify-center gap-2 py-2 text-xs font-bold text-slate-400 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-all"
+            >
+              <LogOut className="w-4 h-4" />
+              Cerrar SesiÃ³n
+            </button>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 flex flex-col">
-        <header className="h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between">
-          <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="text-slate-500">
-            {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <header className="h-16 border-b border-slate-800 bg-slate-900/50 backdrop-blur-xl flex items-center justify-between px-8">
+          <div className="text-sm font-medium text-slate-400">
+            Bienvenido de nuevo, <span className="text-white">{userName}</span>
+          </div>
           <div className="flex items-center gap-4">
-            <div className="text-right">
-              <p className="text-sm font-bold text-slate-900">{user.name}</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-wider">{user.role}</p>
-            </div>
-            <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-600 font-bold">
-              {user.name?.[0]}
+            <div className="px-3 py-1 bg-green-500/10 border border-green-500/20 rounded-full flex items-center gap-2">
+              <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+              <span className="text-[10px] font-bold text-green-500 uppercase tracking-wider">Cloud Sync Active</span>
             </div>
           </div>
         </header>
 
-        <div className="p-8 overflow-y-auto">
+        <div className="flex-1 overflow-y-auto p-8">
           {children}
         </div>
       </main>
