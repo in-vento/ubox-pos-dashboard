@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+import axios from 'axios';
 
 const API_BASE_URL = 'https://web-production-1e51d.up.railway.app/api';
 
