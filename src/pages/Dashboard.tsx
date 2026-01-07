@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import api from '../lib/api';
 import { 
   TrendingUp, 
   Users, 
@@ -7,179 +6,160 @@ import {
   DollarSign,
   ArrowUpRight,
   ArrowDownRight,
-  Clock
+  Loader2
 } from 'lucide-react';
 import { 
-  BarChart, 
-  Bar, 
+  AreaChart, 
+  Area, 
   XAxis, 
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  ResponsiveContainer,
-  AreaChart,
-  Area
+  ResponsiveContainer 
 } from 'recharts';
+import api from '../lib/api';
+
+const StatCard = ({ icon: Icon, label, value, trend, trendValue }: any) => (
+  <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-800">
+    <div className="flex justify-between items-start">
+      <div className="p-3 bg-blue-500/10 rounded-xl">
+        <Icon className="w-6 h-6 text-blue-500" />
+      </div>
+      <div className={`flex items-center gap-1 text-sm font-medium ${
+        trend === 'up' ? 'text-green-500' : 'text-red-500'
+      }`}>
+        {trend === 'up' ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownRight className="w-4 h-4" />}
+        {trendValue}
+      </div>
+    </div>
+    <div className="mt-4">
+      <h3 className="text-slate-400 text-sm font-medium">{label}</h3>
+      <p className="text-2xl font-bold text-white mt-1">{value}</p>
+    </div>
+  </div>
+);
 
 const Dashboard = () => {
   const [stats, setStats] = useState({
-    totalSales: 0,
-    orderCount: 0,
-    activeDevices: 0,
-    averageTicket: 0
+    totalOrders: 0,
+    todayOrders: 0,
+    totalRevenue: 0
   });
   const [isLoading, setIsLoading] = useState(true);
 
-  // Mock data for charts
-  const salesData = [
-    { name: 'Lun', total: 4000 },
-    { name: 'Mar', total: 3000 },
-    { name: 'Mie', total: 2000 },
-    { name: 'Jue', total: 2780 },
-    { name: 'Vie', total: 1890 },
-    { name: 'Sab', total: 2390 },
-    { name: 'Dom', total: 3490 },
-  ];
-
   useEffect(() => {
-    const fetchDashboardData = async () => {
+    const fetchStats = async () => {
       try {
-        // In a real scenario, we would have a /dashboard endpoint
-        // For now, we'll just simulate loading
-        setTimeout(() => {
-          setStats({
-            totalSales: 12450.50,
-            orderCount: 156,
-            activeDevices: 3,
-            averageTicket: 79.80
-          });
-          setIsLoading(false);
-        }, 1000);
+        const businessId = localStorage.getItem('businessId');
+        if (!businessId) return;
+
+        const response = await api.get('/orders/stats', {
+            headers: { 'x-business-id': businessId }
+        });
+        
+        if (response.data.success) {
+          setStats(response.data.data);
+        }
       } catch (error) {
-        console.error('Error fetching dashboard data', error);
+        console.error('Error fetching stats:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchDashboardData();
+    fetchStats();
   }, []);
-
-  const StatCard = ({ icon: Icon, label, value, trend, trendValue }: any) => (
-    <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
-        <div className="p-3 bg-slate-50 text-slate-900 rounded-xl">
-          <Icon size={24} />
-        </div>
-        <div className={`flex items-center gap-1 text-sm font-medium ${trend === 'up' ? 'text-emerald-600' : 'text-rose-600'}`}>
-          {trend === 'up' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
-          {trendValue}
-        </div>
-      </div>
-      <p className="text-slate-500 text-sm font-medium">{label}</p>
-      <h3 className="text-2xl font-bold text-slate-900 mt-1">{value}</h3>
-    </div>
-  );
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-slate-900"></div>
-      </div>
+        <div className="flex items-center justify-center h-64">
+            <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+        </div>
     );
   }
 
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Resumen General</h1>
-        <p className="text-slate-500">Bienvenido de nuevo al panel de control de UBOX.</p>
+        <h1 className="text-2xl font-bold text-white">Dashboard General</h1>
+        <p className="text-slate-400">Resumen de actividad de tu negocio en tiempo real.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard 
-          icon={DollarSign} 
-          label="Ventas Totales" 
-          value={`S/ ${stats.totalSales.toLocaleString()}`} 
-          trend="up" 
-          trendValue="+12.5%" 
+          icon={DollarSign}
+          label="Ventas Totales"
+          value={`$${stats.totalRevenue.toFixed(2)}`}
+          trend="up"
+          trendValue="+12.5%"
         />
         <StatCard 
-          icon={ShoppingBag} 
-          label="Pedidos" 
-          value={stats.orderCount} 
-          trend="up" 
-          trendValue="+8.2%" 
+          icon={ShoppingBag}
+          label="Pedidos Hoy"
+          value={stats.todayOrders.toString()}
+          trend="up"
+          trendValue="+8.2%"
         />
         <StatCard 
-          icon={Users} 
-          label="Ticket Promedio" 
-          value={`S/ ${stats.averageTicket.toFixed(2)}`} 
-          trend="down" 
-          trendValue="-2.4%" 
+          icon={Users}
+          label="Clientes Nuevos"
+          value="12"
+          trend="up"
+          trendValue="+2.4%"
         />
         <StatCard 
-          icon={TrendingUp} 
-          label="Dispositivos Activos" 
-          value={stats.activeDevices} 
-          trend="up" 
-          trendValue="Estable" 
+          icon={TrendingUp}
+          label="Ticket Promedio"
+          value={`$${stats.todayOrders > 0 ? (stats.totalRevenue / stats.totalOrders).toFixed(2) : '0.00'}`}
+          trend="down"
+          trendValue="-1.1%"
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* Sales Chart */}
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-          <div className="flex items-center justify-between mb-8">
-            <h3 className="font-bold text-slate-900 text-lg">Ventas de la Semana</h3>
-            <div className="flex items-center gap-2 text-sm text-slate-500">
-              <Clock size={16} />
-              Últimos 7 días
-            </div>
-          </div>
-          <div className="h-80 w-full">
+      {/* Chart Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2 bg-[#1e293b] p-6 rounded-2xl border border-slate-800">
+          <h3 className="text-lg font-bold text-white mb-6">Resumen de Ventas</h3>
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={salesData}>
+              <AreaChart data={[
+                { name: 'Lun', value: 4000 },
+                { name: 'Mar', value: 3000 },
+                { name: 'Mie', value: 2000 },
+                { name: 'Jue', value: 2780 },
+                { name: 'Vie', value: 1890 },
+                { name: 'Sab', value: 2390 },
+                { name: 'Dom', value: 3490 },
+              ]}>
                 <defs>
-                  <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#0f172a" stopOpacity={0.1}/>
-                    <stop offset="95%" stopColor="#0f172a" stopOpacity={0}/>
+                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} dy={10} />
-                <YAxis axisLine={false} tickLine={false} tick={{fill: '#64748b', fontSize: 12}} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                <XAxis dataKey="name" stroke="#94a3b8" axisLine={false} tickLine={false} />
+                <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tickFormatter={(value) => `$${value}`} />
                 <Tooltip 
-                  contentStyle={{backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'}}
-                  itemStyle={{color: '#0f172a', fontWeight: 'bold'}}
+                  contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#fff' }}
+                  itemStyle={{ color: '#fff' }}
                 />
-                <Area type="monotone" dataKey="total" stroke="#0f172a" strokeWidth={3} fillOpacity={1} fill="url(#colorTotal)" />
+                <Area type="monotone" dataKey="value" stroke="#3b82f6" strokeWidth={3} fillOpacity={1} fill="url(#colorValue)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </div>
 
-        {/* Recent Activity */}
-        <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm">
-          <h3 className="font-bold text-slate-900 text-lg mb-8">Actividad Reciente</h3>
-          <div className="space-y-6">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-900">
-                  <ShoppingBag size={18} />
+        <div className="bg-[#1e293b] p-6 rounded-2xl border border-slate-800">
+            <h3 className="text-lg font-bold text-white mb-6">Actividad Reciente</h3>
+            <div className="space-y-4">
+                <div className="text-slate-400 text-sm text-center py-8">
+                    Las transacciones recientes aparecerÃ¡n aquÃ­.
                 </div>
-                <div className="flex-1">
-                  <p className="text-sm font-bold text-slate-900">Nuevo Pedido #JU-00012{i}</p>
-                  <p className="text-xs text-slate-500">Hace {i * 5} minutos  Mesa 0{i}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-bold text-slate-900">S/ {(Math.random() * 100 + 20).toFixed(2)}</p>
-                  <span className="text-[10px] bg-emerald-50 text-emerald-600 px-2 py-1 rounded-full font-bold uppercase">Pagado</span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <button className="w-full mt-8 py-3 text-sm font-bold text-slate-500 hover:text-slate-900 transition-colors">
-            Ver todas las ventas
-          </button>
+            </div>
+            <button className="w-full mt-6 py-3 rounded-xl bg-slate-800 text-white text-sm font-medium hover:bg-slate-700 transition-colors">
+                Ver todas las ventas
+            </button>
         </div>
       </div>
     </div>
