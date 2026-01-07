@@ -7,7 +7,7 @@ import Dashboard from './pages/Dashboard';
 import Devices from './pages/Devices';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('cloud_token');
   return token ? <>{children}</> : <Navigate to="/login" />;
 };
 
