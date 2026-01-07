@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Cloud, Lock, Mail, Loader2 } from 'lucide-react';
 import api from '../lib/api';
@@ -20,6 +20,14 @@ const Login = () => {
       if (res.data.success) {
         localStorage.setItem('cloud_token', res.data.data.token);
         localStorage.setItem('user_info', JSON.stringify(res.data.data.user));
+        
+        // Save first business ID for default context
+        if (res.data.data.user.businesses && res.data.data.user.businesses.length > 0) {
+          const firstBusiness = res.data.data.user.businesses[0].business;
+          localStorage.setItem('businessId', firstBusiness.id);
+          localStorage.setItem('businessName', firstBusiness.name);
+        }
+        
         navigate('/');
       }
     } catch (err: any) {
