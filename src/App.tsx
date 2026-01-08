@@ -9,6 +9,11 @@ import Orders from './pages/Orders';
 import Inventory from './pages/Inventory';
 import Staff from './pages/Staff';
 import Reports from './pages/Reports';
+import Cashier from './pages/Cashier';
+import Waiters from './pages/Waiters';
+import Catalog from './pages/Catalog';
+import Plans from './pages/Plans';
+import Logs from './pages/Logs';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('cloud_token');
@@ -21,7 +26,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
+
         <Route
           path="/*"
           element={
@@ -34,6 +39,11 @@ function App() {
                   <Route path="/inventory" element={<Inventory />} />
                   <Route path="/staff" element={<Staff />} />
                   <Route path="/reports" element={<Reports />} />
+                  <Route path="/cashier" element={<Cashier />} />
+                  <Route path="/waiters" element={<Waiters />} />
+                  <Route path="/catalog" element={<Catalog />} />
+                  <Route path="/plans" element={<Plans />} />
+                  <Route path="/logs" element={<Logs />} />
                 </Routes>
               </Layout>
             </PrivateRoute>

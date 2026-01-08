@@ -1,14 +1,19 @@
 import React from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Monitor, 
-  ShoppingBag, 
-  Package, 
-  Users, 
-  BarChart3, 
+import {
+  LayoutDashboard,
+  Monitor,
+  ShoppingBag,
+  Package,
+  Users,
+  BarChart3,
   LogOut,
-  Store
+  Store,
+  WalletCards,
+  Users2,
+  BookOpen,
+  CreditCard,
+  History
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -23,10 +28,15 @@ const Layout = ({ children }: LayoutProps) => {
 
   const menuItems = [
     { icon: LayoutDashboard, label: 'Dashboard', path: '/' },
-    { icon: Monitor, label: 'Dispositivos', path: '/devices' },
-    { icon: ShoppingBag, label: 'Pedidos', path: '/orders' },
+    { icon: WalletCards, label: 'Caja', path: '/cashier' },
+    { icon: Users2, label: 'Mozos', path: '/waiters' },
+    { icon: BookOpen, label: 'Catálogo', path: '/catalog' },
     { icon: Package, label: 'Inventario', path: '/inventory' },
     { icon: Users, label: 'Personal', path: '/staff' },
+    { icon: CreditCard, label: 'Planes', path: '/plans' },
+    { icon: History, label: 'Registros', path: '/logs' },
+    { icon: Monitor, label: 'Dispositivos', path: '/devices' },
+    { icon: ShoppingBag, label: 'Pedidos', path: '/orders' },
     { icon: BarChart3, label: 'Reportes', path: '/reports' },
   ];
 
@@ -56,11 +66,10 @@ const Layout = ({ children }: LayoutProps) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${
-                  isActive 
-                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20' 
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group ${isActive
+                    ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/20'
                     : 'hover:bg-slate-800 text-slate-400 hover:text-white'
-                }`}
+                  }`}
               >
                 <item.icon className={`w-5 h-5 ${isActive ? 'text-white' : 'group-hover:text-blue-400'}`} />
                 <span className="font-medium">{item.label}</span>

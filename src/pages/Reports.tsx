@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { Calendar, Download, Loader2 } from 'lucide-react';
 import api from '../lib/api';
+import ReadOnlyBanner from '../components/ReadOnlyBanner';
 
 const Reports = () => {
     const [data, setData] = useState<any[]>([]);
@@ -26,7 +27,7 @@ const Reports = () => {
                 // Aggregate orders by date
                 const orders = response.data.data;
                 const salesByDate: Record<string, number> = {};
-                
+
                 orders.forEach((order: any) => {
                     const date = new Date(order.createdAt).toLocaleDateString('es-ES', { weekday: 'short' });
                     salesByDate[date] = (salesByDate[date] || 0) + Number(order.total);
@@ -56,6 +57,7 @@ const Reports = () => {
 
     return (
         <div className="space-y-6">
+            <ReadOnlyBanner />
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-white">Reportes</h1>
@@ -81,7 +83,7 @@ const Reports = () => {
                             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
                             <XAxis dataKey="name" stroke="#94a3b8" axisLine={false} tickLine={false} />
                             <YAxis stroke="#94a3b8" axisLine={false} tickLine={false} tickFormatter={(value) => `$${value}`} />
-                            <Tooltip 
+                            <Tooltip
                                 contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', color: '#fff' }}
                                 cursor={{ fill: '#334155', opacity: 0.2 }}
                             />
