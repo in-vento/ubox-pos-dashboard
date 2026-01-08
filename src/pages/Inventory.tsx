@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Package, Loader2, Search, Filter, Plus } from 'lucide-react';
+import { Package, Loader2, Search, Filter } from 'lucide-react';
 import api from '../lib/api';
+import ReadOnlyBanner from '../components/ReadOnlyBanner';
 
 type Product = {
     id: string;
@@ -50,24 +51,22 @@ const Inventory = () => {
 
     return (
         <div className="space-y-6">
+            <ReadOnlyBanner />
+
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-white">Inventario</h1>
-                    <p className="text-slate-400">Gestiona tus productos y existencias.</p>
+                    <p className="text-slate-400">Visualiza tus productos y existencias.</p>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-                    <Plus className="w-5 h-5" />
-                    Nuevo Producto
-                </button>
             </div>
 
             {/* Filters */}
             <div className="flex gap-4 bg-[#1e293b] p-4 rounded-xl border border-slate-800">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
-                    <input 
-                        type="text" 
-                        placeholder="Buscar producto..." 
+                    <input
+                        type="text"
+                        placeholder="Buscar producto..."
                         className="w-full bg-[#0f172a] border border-slate-700 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                 </div>
@@ -88,13 +87,12 @@ const Inventory = () => {
                                 <th className="p-4 text-sm font-medium text-slate-400">Precio</th>
                                 <th className="p-4 text-sm font-medium text-slate-400">Stock</th>
                                 <th className="p-4 text-sm font-medium text-slate-400">Última Actualización</th>
-                                <th className="p-4 text-sm font-medium text-slate-400">Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
                             {products.length === 0 ? (
                                 <tr>
-                                    <td colSpan={6} className="p-8 text-center text-slate-500">
+                                    <td colSpan={5} className="p-8 text-center text-slate-500">
                                         <div className="flex flex-col items-center gap-2">
                                             <Package className="w-8 h-8 opacity-50" />
                                             <p>No hay productos registrados aún.</p>
@@ -114,23 +112,17 @@ const Inventory = () => {
                                             ${Number(product.price).toFixed(2)}
                                         </td>
                                         <td className="p-4">
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                product.stock > 10 
-                                                ? 'bg-green-500/10 text-green-500' 
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${product.stock > 10
+                                                ? 'bg-green-500/10 text-green-500'
                                                 : product.stock > 0
-                                                ? 'bg-yellow-500/10 text-yellow-500'
-                                                : 'bg-red-500/10 text-red-500'
-                                            }`}>
+                                                    ? 'bg-yellow-500/10 text-yellow-500'
+                                                    : 'bg-red-500/10 text-red-500'
+                                                }`}>
                                                 {product.stock} un.
                                             </span>
                                         </td>
                                         <td className="p-4 text-sm text-slate-400">
                                             {new Date(product.updatedAt).toLocaleDateString()}
-                                        </td>
-                                        <td className="p-4">
-                                            <button className="text-blue-500 hover:text-blue-400 text-sm font-medium">
-                                                Editar
-                                            </button>
                                         </td>
                                     </tr>
                                 ))

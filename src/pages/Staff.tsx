@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Users, Loader2, UserPlus, Shield } from 'lucide-react';
+import { Users, Loader2, Shield } from 'lucide-react';
 import api from '../lib/api';
+import ReadOnlyBanner from '../components/ReadOnlyBanner';
 
 type User = {
     id: string;
@@ -54,15 +55,13 @@ const Staff = () => {
 
     return (
         <div className="space-y-6">
+            <ReadOnlyBanner />
+
             <div className="flex justify-between items-center">
                 <div>
                     <h1 className="text-2xl font-bold text-white">Personal</h1>
-                    <p className="text-slate-400">Gestiona el equipo de trabajo y sus permisos.</p>
+                    <p className="text-slate-400">Visualiza el equipo de trabajo y sus permisos.</p>
                 </div>
-                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium">
-                    <UserPlus className="w-5 h-5" />
-                    Invitar Usuario
-                </button>
             </div>
 
             {error && (
@@ -84,23 +83,17 @@ const Staff = () => {
                                     <p className="text-sm text-slate-400">{user.email}</p>
                                 </div>
                             </div>
-                            <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                user.role === 'OWNER' ? 'bg-purple-500/10 text-purple-500' :
+                            <span className={`px-2 py-1 rounded text-xs font-bold ${user.role === 'OWNER' ? 'bg-purple-500/10 text-purple-500' :
                                 user.role === 'ADMIN' ? 'bg-blue-500/10 text-blue-500' :
-                                'bg-slate-700 text-slate-300'
-                            }`}>
+                                    'bg-slate-700 text-slate-300'
+                                }`}>
                                 {user.role}
                             </span>
                         </div>
-                        
-                        <div className="pt-4 border-t border-slate-700/50 flex justify-between items-center">
-                            <div className="flex items-center gap-2 text-xs text-slate-500">
-                                <Shield className="w-3 h-3" />
-                                {user.role === 'OWNER' ? 'Acceso Total' : 'Acceso Limitado'}
-                            </div>
-                            <button className="text-sm text-slate-400 hover:text-white transition-colors">
-                                Gestionar
-                            </button>
+
+                        <div className="pt-4 border-t border-slate-700/50 flex items-center gap-2 text-xs text-slate-500">
+                            <Shield className="w-3 h-3" />
+                            {user.role === 'OWNER' ? 'Acceso Total' : 'Acceso Limitado'}
                         </div>
                     </div>
                 ))}

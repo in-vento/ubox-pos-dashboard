@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Monitor, ShieldCheck, ShieldAlert, Loader2, XCircle } from 'lucide-react';
 import api from '../lib/api';
+import ReadOnlyBanner from '../components/ReadOnlyBanner';
 
 type Device = {
   id: string;
@@ -44,7 +45,7 @@ const Devices = () => {
       });
 
       if (response.data.success) {
-        setDevices(devices.map(d => 
+        setDevices(devices.map(d =>
           d.id === deviceId ? { ...d, isAuthorized: !currentStatus } : d
         ));
       }
@@ -65,12 +66,14 @@ const Devices = () => {
 
   return (
     <div className="space-y-6">
+      <ReadOnlyBanner />
+
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-white">Dispositivos POS</h1>
-          <p className="text-slate-400">Gestiona y autoriza las computadoras que pueden usar el sistema.</p>
+          <p className="text-slate-400">Visualiza las computadoras registradas en el sistema.</p>
         </div>
-        <button 
+        <button
           onClick={fetchDevices}
           className="p-2 hover:bg-slate-800 rounded-full transition-colors"
         >
@@ -93,19 +96,16 @@ const Devices = () => {
           </div>
         ) : (
           devices.map((device) => (
-            <div 
-              key={device.id} 
-              className={`bg-[#1e293b] border rounded-xl p-6 flex items-center justify-between transition-all ${
-                device.isAuthorized ? 'border-green-500/30' : 'border-slate-800'
-              }`}
+            <div
+              key={device.id}
+              className={`bg-[#1e293b] border rounded-xl p-6 flex items-center justify-between transition-all ${device.isAuthorized ? 'border-green-500/30' : 'border-slate-800'
+                }`}
             >
               <div className="flex items-center gap-4">
-                <div className={`p-3 rounded-lg ${
-                  device.isAuthorized ? 'bg-green-500/20' : 'bg-slate-700/50'
-                }`}>
-                  <Monitor className={`w-6 h-6 ${
-                    device.isAuthorized ? 'text-green-500' : 'text-slate-400'
-                  }`} />
+                <div className={`p-3 rounded-lg ${device.isAuthorized ? 'bg-green-500/20' : 'bg-slate-700/50'
+                  }`}>
+                  <Monitor className={`w-6 h-6 ${device.isAuthorized ? 'text-green-500' : 'text-slate-400'
+                    }`} />
                 </div>
                 <div>
                   <h3 className="font-bold text-white text-lg">{device.name}</h3>
@@ -117,37 +117,37 @@ const Devices = () => {
               </div>
 
               <div className="flex items-center gap-4">
-                <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-                  device.isAuthorized 
-                    ? 'bg-green-500/10 text-green-500 border border-green-500/20' 
-                    : 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
-                }`}>
+                <div className={`px-3 py-1 rounded-full text-xs font-medium ${device.isAuthorized
+                  ? 'bg-green-500/10 text-green-500 border border-green-500/20'
+                  : 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+                  }`}>
                   {device.isAuthorized ? 'Autorizado' : 'Pendiente'}
                 </div>
 
-                <button
-                  onClick={() => toggleAuthorization(device.id, device.isAuthorized)}
-                  disabled={authorizingId === device.id}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${
-                    device.isAuthorized
-                      ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
-                      : 'bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-900/20'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
-                >
-                  {authorizingId === device.id ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : device.isAuthorized ? (
-                    <>
-                      <XCircle className="w-4 h-4" />
-                      Revocar
-                    </>
-                  ) : (
-                    <>
-                      <ShieldCheck className="w-4 h-4" />
-                      Autorizar Dispositivo
-                    </>
-                  )}
-                </button>
+                <div className="relative group">
+                  <button
+                    disabled
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all opacity-50 cursor-not-allowed ${device.isAuthorized
+                      ? 'bg-red-500/10 text-red-500'
+                      : 'bg-green-600/50 text-white'
+                      }`}
+                  >
+                    {device.isAuthorized ? (
+                      <>
+                        <XCircle className="w-4 h-4" />
+                        Revocar
+                      </>
+                    ) : (
+                      <>
+                        <ShieldCheck className="w-4 h-4" />
+                        Autorizar Dispositivo
+                      </>
+                    )}
+                  </button>
+                  <div className="absolute bottom-full mb-2 right-0 w-64 bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
+                    Usa la aplicación de escritorio para gestionar autorizaciones
+                  </div>
+                </div>
               </div>
             </div>
           ))
