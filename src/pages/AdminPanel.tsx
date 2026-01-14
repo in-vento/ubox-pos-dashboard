@@ -256,37 +256,6 @@ export default function AdminPanel() {
                 </button>
               </div>
             </div>
-                <div className="grid gap-2">
-                  <Select onValueChange={setMgmtUserId} value={mgmtUserId || undefined}>
-                    <SelectTrigger className="h-9 text-sm flex-1 bg-[#0f172a] border-slate-700">
-                      <SelectValue placeholder={isLoadingUsers ? "Cargando..." : managementUsers.length === 0 ? "No se encontraron admins" : "Seleccionar Usuario"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {managementUsers.map(u => (
-                        <SelectItem key={u.id} value={u.id}>{u.name} ({u.role})</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <div className="grid gap-2">
-                    <Input
-                      type="password"
-                      placeholder="Toca para ingresar PIN"
-                      readOnly
-                      value={mgmtPin ? "****" : ""}
-                      onClick={() => setIsMgmtPinDialogOpen(true)}
-                      className="text-center text-lg tracking-[0.2rem] h-10 cursor-pointer bg-[#0f172a] border-slate-700 text-white"
-                    />
-                  </div>
-
-                  {mgmtError && <p className="text-[10px] text-red-500 text-center">{mgmtError}</p>}
-                  <button
-                    onClick={handleMgmtLogin}
-                    disabled={!mgmtUserId || mgmtPin.length < 4 || isLoggingInMgmt}
-                    className="w-full h-10 text-base bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                  >
-                    {isLoggingInMgmt ? <Loader2 className="h-4 w-4 animate-spin" /> : "Ingresar"}
-                  </button>
-                </div>
 
             <div className="grid grid-cols-3 gap-2">
               <button className="flex flex-col h-auto py-1.5 gap-0.5 border border-primary/20 rounded-lg bg-[#1e293b] text-white hover:bg-slate-700 transition-colors">
@@ -328,7 +297,7 @@ export default function AdminPanel() {
                 onClick={() => setIsMgmtPinDialogOpen(false)}
                 className="text-slate-400 hover:text-white transition-colors"
               >
-                 <X className="w-4 h-4" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
@@ -373,53 +342,11 @@ export default function AdminPanel() {
                 >
                   Confirmar PIN
                 </button>
-               </div>
-                 </div>
-             </div>
+              </div>
             </div>
-      </>
-  );
-}
-        <div className="space-y-4">
-          <p className="text-slate-400 text-sm">
-            Ingresa tu PIN de seguridad para continuar.
-          </p>
-          
-          <div className="space-y-2">
-            <Input
-              type="password"
-              maxLength={4}
-              value={mgmtPin}
-              readOnly
-              className="text-center text-3xl tracking-[1rem] h-14 bg-[#0f172a] border-slate-700 text-white"
-              placeholder="****"
-            />
           </div>
-
-          {/* Numeric Keypad for Management PIN */}
-            <div className="grid grid-cols-3 gap-2">
-              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(num => (
-                <button
-                  key={num}
-                  className="h-14 text-xl font-semibold bg-[#0f172a] border border-slate-700 text-white hover:bg-slate-700 rounded-lg transition-colors"
-                  onClick={() => mgmtPin.length < 4 && setMgmtPin(prev => prev + num)}
-                >
-                  {num}
-                </button>
-              ))}
-              <button className="h-14 text-xl font-semibold bg-[#0f172a] border border-slate-700 text-white hover:bg-slate-700 rounded-lg transition-colors" onClick={() => setMgmtPin('')}>C</button>
-              <button className="h-14 text-xl font-semibold bg-[#0f172a] border border-slate-700 text-white hover:bg-slate-700 rounded-lg transition-colors" onClick={() => mgmtPin.length < 4 && setMgmtPin(prev => prev + '0')}>0</button>
-              <button className="h-14 text-xl font-semibold bg-[#0f172a] border border-slate-700 text-white hover:bg-slate-700 rounded-lg transition-colors" onClick={() => setMgmtPin(prev => prev.slice(0, -1))}>⌫</button>
-            </div>
-          
-                <button
-                    onClick={() => setIsMgmtPinDialogOpen(false)}
-                    className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    disabled={mgmtPin.length < 4}
-                  >
-                    Confirmar PIN
-                  </button>
         </div>
+      )}
     </>
   );
 }
