@@ -14,6 +14,9 @@ import Waiters from './pages/Waiters';
 import Catalog from './pages/Catalog';
 import Plans from './pages/Plans';
 import Logs from './pages/Logs';
+import AdminPanel from './pages/AdminPanel';
+import AdminDashboard from './pages/AdminDashboard';
+import AdminPlans from './pages/AdminPlans';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const token = localStorage.getItem('cloud_token');
@@ -27,8 +30,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
+        {/* Rutas del Dashboard actual (supervisión) */}
         <Route
-          path="/*"
+          path="/dashboard/*"
           element={
             <PrivateRoute>
               <Layout>
@@ -49,6 +53,14 @@ function App() {
             </PrivateRoute>
           }
         />
+
+        {/* Rutas del Admin Panel (idéntico a desktop) */}
+        <Route path="/admin-panel" element={<AdminPanel />} />
+        <Route path="/admin-dashboard/:role?" element={<AdminDashboard />} />
+        <Route path="/admin-plans" element={<AdminPlans />} />
+
+        {/* Redirección por defecto al dashboard */}
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </Router>
   );

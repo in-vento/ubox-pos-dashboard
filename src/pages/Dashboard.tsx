@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   TrendingUp, 
   Users, 
@@ -6,7 +7,8 @@ import {
   DollarSign,
   ArrowUpRight,
   ArrowDownRight,
-  Loader2
+  Loader2,
+  Settings
 } from 'lucide-react';
 import { 
   AreaChart, 
@@ -40,6 +42,7 @@ const StatCard = ({ icon: Icon, label, value, trend, trendValue }: any) => (
 );
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalOrders: 0,
     todayOrders: 0,
@@ -80,9 +83,29 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Dashboard General</h1>
-        <p className="text-slate-400">Resumen de actividad de tu negocio en tiempo real.</p>
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Dashboard General</h1>
+          <p className="text-slate-400">Resumen de actividad de tu negocio en tiempo real.</p>
+        </div>
+        <div className="flex gap-2">
+          <Button
+            onClick={() => navigate('/admin-panel')}
+            variant="outline"
+            className="border-blue-500/50 text-blue-500 hover:bg-blue-500/10"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            Panel Administrador
+          </Button>
+          <Button
+            onClick={() => window.open('/dashboard/devices', '_blank')}
+            variant="outline"
+            className="border-green-500/50 text-green-500 hover:bg-green-500/10"
+          >
+            <Users className="w-4 h-4 mr-2" />
+            Gestionar Dispositivos
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
