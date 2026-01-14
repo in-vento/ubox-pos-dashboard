@@ -126,10 +126,10 @@ const Devices = () => {
 
                 <div className="relative group">
                   <button
-                    disabled
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all opacity-50 cursor-not-allowed ${device.isAuthorized
-                      ? 'bg-red-500/10 text-red-500'
-                      : 'bg-green-600/50 text-white'
+                    disabled={false}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all cursor-pointer ${device.isAuthorized
+                      ? 'bg-red-500/10 text-red-500 hover:bg-red-500/20'
+                      : 'bg-green-600/50 text-white hover:bg-green-600'
                       }`}
                   >
                     {device.isAuthorized ? (
@@ -145,7 +145,10 @@ const Devices = () => {
                     )}
                   </button>
                   <div className="absolute bottom-full mb-2 right-0 w-64 bg-slate-900 border border-slate-700 rounded-lg p-3 text-xs text-slate-300 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10">
-                    Usa la aplicación de escritorio para gestionar autorizaciones
+                    {device.isAuthorized 
+                      ? 'Revocar acceso de este dispositivo' 
+                      : 'Autorizar este dispositivo para usar la app desktop'
+                    }
                   </div>
                 </div>
               </div>

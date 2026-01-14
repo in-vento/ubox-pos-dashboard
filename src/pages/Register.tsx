@@ -1,6 +1,6 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Cloud, Lock, Mail, User, Loader2, Building } from 'lucide-react';
+import { Cloud, Lock, Mail, User, Loader2, Building, Copy, CheckCircle } from 'lucide-react';
 import api from '../lib/api';
 
 const Register = () => {
@@ -10,6 +10,9 @@ const Register = () => {
   const [businessName, setBusinessName] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showLicenseDialog, setShowLicenseDialog] = useState(false);
+  const [licenseKey, setLicenseKey] = useState('');
+  const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -18,7 +21,7 @@ const Register = () => {
     setError('');
 
     try {
-      // 1. Register User
+      // 1. Register User (backend crea negocio y licencia automáticamente)
       const userRes = await api.post('/auth/register', {
         name,
         email,
@@ -26,23 +29,28 @@ const Register = () => {
       });
 
       if (userRes.data.success) {
-        const token = userRes.data.data.token;
+        const { token, user, business, licenseKey } = userRes.data.data;
+        
+        // Guardar datos
         localStorage.setItem('cloud_token', token);
-        localStorage.setItem('user_info', JSON.stringify(userRes.data.data.user));
-
-        // 2. Create Initial Business
-        await api.post('/business', {
-          name: businessName,
-          slug: businessName.toLowerCase().replace(/\s+/g, '-')
-        });
-
-        navigate('/');
+        localStorage.setItem('user_info', JSON.stringify(user));
+        localStorage.setItem('businessId', business.id);
+        
+        // Mostrar licencia generada
+        setLicenseKey(licenseKey);
+        setShowLicenseDialog(true);
       }
     } catch (err: any) {
       setError(err.response?.data?.error?.message || 'Error al registrarse. Inténtalo de nuevo.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const copyLicense = () => {
+    navigator.clipboard.writeText(licenseKey);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
@@ -151,6 +159,53 @@ const Register = () => {
           </p>
         </div>
       </div>
+
+      {/* License Dialog */}
+      {showLicenseDialog && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-[#1e293b] border border-slate-700 rounded-2xl p-6 max-w-md w-full">
+            <div className="text-center mb-6">
+              <div className="mx-auto w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mb-4">
+                <CheckCircle className="w-6 h-6 text-green-500" />
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">¡Registro Exitoso!</h3>
+              <p className="text-slate-400 text-sm">
+                Tu licencia ha sido generada. Guárdala para instalar la app desktop.
+              </p>
+            </div>
+
+            <div className="bg-[#0f172a] border border-slate-700 rounded-lg p-4 mb-4">
+              <p className="text-sm font-medium text-slate-300 mb-2">Tu Licencia Ubox POS:</p>
+              <div className="font-mono text-lg text-center p-3 bg-slate-800 border border-slate-600 rounded text-green-400">
+                {licenseKey}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <button
+                onClick={copyLicense}
+                className="flex items-center justify-center gap-2 py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors"
+              >
+                {copied ? <CheckCircle className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied ? 'Copiado' : 'Copiar'}
+              </button>
+              <button
+                onClick={() => navigate('/dashboard')}
+                className="py-2 px-4 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors"
+              >
+                Ir al Dashboard
+              </button>
+            </div>
+
+            <div className="text-xs text-slate-500 text-center">
+              <p className="mb-1">📋 Próximos pasos:</p>
+              <p>1. Descarga la app desktop</p>
+              <p>2. Ingresa esta licencia</p>
+              <p>3. Autoriza el dispositivo desde aquí</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
