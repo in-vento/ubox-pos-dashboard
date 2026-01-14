@@ -89,22 +89,20 @@ const Dashboard = () => {
           <p className="text-slate-400">Resumen de actividad de tu negocio en tiempo real.</p>
         </div>
         <div className="flex gap-2">
-          <Button
+          <button
             onClick={() => navigate('/admin-panel')}
-            variant="outline"
-            className="border-blue-500/50 text-blue-500 hover:bg-blue-500/10"
+            className="border border-blue-500/50 text-blue-500 hover:bg-blue-500/10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
           >
             <Settings className="w-4 h-4 mr-2" />
             Panel Administrador
-          </Button>
-          <Button
+          </button>
+          <button
             onClick={() => window.open('/dashboard/devices', '_blank')}
-            variant="outline"
-            className="border-green-500/50 text-green-500 hover:bg-green-500/10"
+            className="border border-green-500/50 text-green-500 hover:bg-green-500/10 px-4 py-2 rounded-lg font-medium transition-colors flex items-center"
           >
             <Users className="w-4 h-4 mr-2" />
             Gestionar Dispositivos
-          </Button>
+          </button>
         </div>
       </div>
 

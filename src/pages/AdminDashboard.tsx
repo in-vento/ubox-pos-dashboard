@@ -136,139 +136,126 @@ export default function AdminDashboard() {
             Rol: {role} • {new Date().toLocaleDateString()}
           </p>
         </div>
-        <Button 
+        <button 
           onClick={() => navigate('/admin-panel')}
-          className="bg-blue-600 hover:bg-blue-700"
+          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
         >
           Cambiar Usuario
-        </Button>
+        </button>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-[#1e293b] border-slate-800">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Usuarios Activos</p>
-                <p className="text-2xl font-bold text-white">{stats.activeUsers}</p>
-              </div>
-              <Users className="w-8 h-8 text-blue-500" />
+        <div className="bg-[#1e293b] border border-slate-800 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Usuarios Activos</p>
+              <p className="text-2xl font-bold text-white">{stats.activeUsers}</p>
             </div>
-          </CardContent>
-        </Card>
+            <Users className="w-8 h-8 text-blue-500" />
+          </div>
+        </div>
 
-        <Card className="bg-[#1e293b] border-slate-800">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Pedidos Totales</p>
-                <p className="text-2xl font-bold text-white">{stats.totalOrders}</p>
-              </div>
-              <FileText className="w-8 h-8 text-red-500" />
+        <div className="bg-[#1e293b] border border-slate-800 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Pedidos Totales</p>
+              <p className="text-2xl font-bold text-white">{stats.totalOrders}</p>
             </div>
-          </CardContent>
-        </Card>
+            <FileText className="w-8 h-8 text-red-500" />
+          </div>
+        </div>
 
-        <Card className="bg-[#1e293b] border-slate-800">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Ingresos Hoy</p>
-                <p className="text-2xl font-bold text-white">${stats.todayRevenue.toFixed(2)}</p>
-              </div>
-              <CreditCard className="w-8 h-8 text-green-500" />
+        <div className="bg-[#1e293b] border border-slate-800 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Ingresos Hoy</p>
+              <p className="text-2xl font-bold text-white">${stats.todayRevenue.toFixed(2)}</p>
             </div>
-          </CardContent>
-        </Card>
+            <CreditCard className="w-8 h-8 text-green-500" />
+          </div>
+        </div>
 
-        <Card className="bg-[#1e293b] border-slate-800">
-          <CardContent className="p-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-slate-400 text-sm">Dispositivos</p>
-                <p className="text-2xl font-bold text-white">1</p>
-              </div>
-              <Settings className="w-8 h-8 text-purple-500" />
+        <div className="bg-[#1e293b] border border-slate-800 rounded-xl p-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-slate-400 text-sm">Dispositivos</p>
+              <p className="text-2xl font-bold text-white">1</p>
             </div>
-          </CardContent>
-        </Card>
+            <Settings className="w-8 h-8 text-purple-500" />
+          </div>
+        </div>
       </div>
 
       {/* Menu Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {menuItems.map((item, index) => (
-          <Card 
+          <div 
             key={index}
-            className="bg-[#1e293b] border-slate-800 hover:border-slate-700 transition-colors cursor-pointer group"
+            className="bg-[#1e293b] border border-slate-800 hover:border-slate-700 transition-colors cursor-pointer group rounded-xl p-6"
           >
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <div className={`w-12 h-12 ${item.bgColor} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-                    <item.icon className={`w-6 h-6 ${item.color}`} />
-                  </div>
-                  <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
-                  <p className="text-slate-400 text-sm mb-3">{item.description}</p>
-                  {item.count !== undefined && (
-                    <Badge variant="secondary" className="bg-slate-700 text-slate-300">
-                      {item.count} {item.title.toLowerCase()}
-                    </Badge>
-                  )}
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <div className={`w-12 h-12 ${item.bgColor} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                  <item.icon className={`w-6 h-6 ${item.color}`} />
                 </div>
+                <h3 className="text-lg font-semibold text-white mb-1">{item.title}</h3>
+                <p className="text-slate-400 text-sm mb-3">{item.description}</p>
+                {item.count !== undefined && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-slate-700 text-slate-300">
+                    {item.count} {item.title.toLowerCase()}
+                  </span>
+                )}
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Recent Staff Users */}
-      <Card className="bg-[#1e293b] border-slate-800">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center justify-between">
-            <span>Personal Reciente</span>
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Agregar Usuario
-            </Button>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {staffUsers.length === 0 ? (
-            <div className="text-center py-8">
-              <Users className="w-12 h-12 text-slate-600 mx-auto mb-4" />
-              <p className="text-slate-400">No hay usuarios registrados</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {staffUsers.slice(0, 5).map((user) => (
-                <div key={user.id} className="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-600/20 rounded-full flex items-center justify-center">
-                      <Users className="w-5 h-5 text-blue-500" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-white">{user.name}</p>
-                      <p className="text-sm text-slate-400">{user.role}</p>
-                    </div>
+      <div className="bg-[#1e293b] border border-slate-800 rounded-xl p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-bold text-white">Personal Reciente</h2>
+          <button className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-sm font-medium transition-colors flex items-center">
+            <Plus className="w-4 h-4 mr-2" />
+            Agregar Usuario
+          </button>
+        </div>
+        {staffUsers.length === 0 ? (
+          <div className="text-center py-8">
+            <Users className="w-12 h-12 text-slate-600 mx-auto mb-4" />
+            <p className="text-slate-400">No hay usuarios registrados</p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {staffUsers.slice(0, 5).map((user) => (
+              <div key={user.id} className="flex items-center justify-between p-3 bg-slate-800 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-blue-600/20 rounded-full flex items-center justify-center">
+                    <Users className="w-5 h-5 text-blue-500" />
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Badge 
-                      variant={user.status === 'Active' ? 'default' : 'secondary'}
-                      className={user.status === 'Active' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'}
-                    >
-                      {user.status === 'Active' ? 'Activo' : 'Inactivo'}
-                    </Badge>
-                    <Button size="sm" variant="ghost" className="text-slate-400 hover:text-white">
-                      <Edit className="w-4 h-4" />
-                    </Button>
+                  <div>
+                    <p className="font-medium text-white">{user.name}</p>
+                    <p className="text-sm text-slate-400">{user.role}</p>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+                <div className="flex items-center gap-2">
+                  <span 
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                      user.status === 'Active' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
+                    }`}
+                  >
+                    {user.status === 'Active' ? 'Activo' : 'Inactivo'}
+                  </span>
+                  <button className="text-slate-400 hover:text-white p-1 rounded transition-colors">
+                    <Edit className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

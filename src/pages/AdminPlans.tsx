@@ -144,13 +144,13 @@ export default function Plans() {
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {plans.map((plan) => (
-            <Card 
+            <div 
               key={plan.id}
-              className={`relative bg-[#1e293b] border ${
+              className={`relative bg-[#1e293b] border rounded-xl ${
                 plan.recommended 
                   ? 'border-blue-500/50 shadow-lg shadow-blue-500/20' 
                   : 'border-slate-700'
-              } hover:border-slate-600 transition-all duration-300`}
+              } hover:border-slate-600 transition-all duration-300 p-6`}
             >
               {plan.recommended && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
@@ -160,10 +160,10 @@ export default function Plans() {
                 </div>
               )}
               
-              <CardHeader className="text-center pb-4">
-                <CardTitle className="text-xl font-bold text-white mb-2">
+              <div className="text-center pb-6">
+                <h3 className="text-xl font-bold text-white mb-2">
                   {plan.name}
-                </CardTitle>
+                </h3>
                 <div className="flex items-baseline justify-center gap-1">
                   <span className="text-3xl font-bold text-white">{plan.price}</span>
                   <span className="text-slate-400">/{plan.duration}</span>
@@ -173,9 +173,9 @@ export default function Plans() {
                     {plan.deviceLimit === 999 ? 'Dispositivos ilimitados' : `${plan.deviceLimit} dispositivo${plan.deviceLimit > 1 ? 's' : ''}`}
                   </p>
                 )}
-              </CardHeader>
+              </div>
               
-              <CardContent className="space-y-6">
+              <div className="space-y-6">
                 <div className="space-y-3">
                   {plan.features.map((feature, index) => (
                     <div key={index} className="flex items-center gap-3">
@@ -185,14 +185,13 @@ export default function Plans() {
                   ))}
                 </div>
                 
-                <Button
+                <button
                   onClick={() => handleSelectPlan(plan.id)}
-                  className={`w-full py-3 font-medium transition-all ${
+                  className={`w-full py-3 font-medium transition-all rounded-lg ${
                     plan.recommended
                       ? 'bg-blue-600 hover:bg-blue-700 text-white'
                       : 'bg-slate-700 hover:bg-slate-600 text-white'
                   }`}
-                  variant={selectedPlan === plan.id ? "default" : "outline"}
                 >
                   {selectedPlan === plan.id ? (
                     <div className="flex items-center gap-2">
@@ -202,9 +201,9 @@ export default function Plans() {
                   ) : (
                     `Elegir ${plan.name}`
                   )}
-                </Button>
-              </CardContent>
-            </Card>
+                </button>
+              </div>
+            </div>
           ))}
         </div>
 
@@ -269,12 +268,12 @@ export default function Plans() {
               Contáctanos para obtener una solución adaptada a las necesidades específicas de tu negocio.
             </p>
             <div className="flex gap-4 justify-center">
-              <Button size="lg" className="bg-white text-blue-600 hover:bg-slate-100">
+              <button className="bg-white text-blue-600 hover:bg-slate-100 px-6 py-3 rounded-lg font-medium transition-colors">
                 Contactar Ventas
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              </button>
+              <button className="border border-white text-white hover:bg-white/10 px-6 py-3 rounded-lg font-medium transition-colors">
                 Agendar Demo
-              </Button>
+              </button>
             </div>
           </div>
         </div>
